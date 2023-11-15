@@ -1,5 +1,6 @@
 import { readFileSync, appendFile } from "fs";
 import { processDateList } from "./functions/processDateStr";
+import { findFreeIntervals } from "./functions/getIntervals";
 
 /**
  * 
@@ -14,15 +15,15 @@ export async function solveFirstQuestion(
 ): Promise<string> {
 
   //empty array to store processed data
-  const data:any = []
+  const data: any = []
 
   //first read the contents of the input file
   const fileContents = readFileSync(inputFilePath, 'utf-8');
 
   //process each line at a time
   fileContents.split(/\r?\n/).forEach((line) => {
-   const resultantDates = processDateList(line)
-   data.push(...resultantDates)
+    const resultantDates = processDateList(line)
+    data.push(...resultantDates)
   });
 
   //sort the processed data into ascending order so we can return the earliest available
@@ -30,7 +31,7 @@ export async function solveFirstQuestion(
 
   //format date in iso format for returning
   const utcDate = new Date(sorted[0]).toISOString();
-  
+
   return utcDate;
 }
 
@@ -47,15 +48,15 @@ export async function solveSecondQuestion(
 ): Promise<string> {
 
   //empty array to store processed data
-  const data:any = []
+  const data: any = []
 
   //first read the contents of the input file
   const fileContents = readFileSync(inputFilePath, 'utf-8');
 
   //process each line at a time
   fileContents.split(/\r?\n/).forEach((line) => {
-   const resultantDates = processDateList(line)
-   data.push(...resultantDates)
+    const resultantDates = processDateList(line)
+    data.push(...resultantDates)
   });
 
   //sort the processed data into ascending order so we can return the latest available
@@ -63,29 +64,33 @@ export async function solveSecondQuestion(
 
   //get the latest date in iso date format - using the length (-1 as arrays start at 0) to get the last item in the sorted array
   const utcDate = new Date(sorted[sorted.length - 1]).toISOString();
-  
+
   return utcDate;
 }
 
 export async function solveThirdQuestion(
   inputFilePath: string
 ): Promise<string[]> {
-   //empty array to store processed data
-   const data:any = []
+  //  //empty array to store processed data
+  //  const data:any = []
 
-   //first read the contents of the input file
-   const fileContents = readFileSync(inputFilePath, 'utf-8');
- 
-   //process each line at a time
-   fileContents.split(/\r?\n/).forEach((line, index) => {
-    const resultantDates = processDateList(line)
-    data.push({[index]: resultantDates})
-   });
+  //  //first read the contents of the input file
+  //  const fileContents = readFileSync(inputFilePath, 'utf-8');
 
-   appendFile('outputTex.txt', JSON.stringify(data) + '\n\n', function(err){
-    console.log(err)
-   } )
+  //  //process each line at a time
+  //  fileContents.split(/\r?\n/).forEach((line, index) => {
+  //   const resultantDates = processDateList(line)
+  //   data.push({[index]: resultantDates})
+  //  });
 
-   return []
-  }
- 
+  //  appendFile('outputTex.txt', JSON.stringify(data) + '\n\n', function(err){
+  //   console.log(err)
+  //  } )
+
+  const inputData = readFileSync(inputFilePath, 'utf8').split('\n').filter(Boolean);
+
+  // Find and print the result
+  const result = findFreeIntervals(inputData);
+
+  return result
+}
